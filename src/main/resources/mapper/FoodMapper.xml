@@ -23,8 +23,4 @@
         sellByDate,createTime,updateTime,
         isDelete
     </sql>
-    <select id="selectByPage" resultType="com.test.warehouseend.model.domain.Food">
-        SELECT * FROM food
-            LIMIT #{limit} OFFSET #{offset}
-    </select>
 </mapper>

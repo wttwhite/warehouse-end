@@ -13,9 +13,5 @@ import java.util.List;
 * @Entity generator.domain.Food
 */
 public interface FoodMapper extends BaseMapper<Food> {
-    // 分页查询方法
-    List<Food> selectByPage(@Param("name") String name,
-                            @Param("offset") int offset,
-                            @Param("limit") int limit);
 
 }

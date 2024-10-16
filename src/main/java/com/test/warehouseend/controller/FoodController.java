@@ -1,6 +1,8 @@
 package com.test.warehouseend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.test.warehouseend.Dto.Food.FoodQueryDto;
+import com.test.warehouseend.common.BasePageResponse;
 import com.test.warehouseend.common.BaseResponse;
 import com.test.warehouseend.model.domain.Food;
 import com.test.warehouseend.service.FoodService;
@@ -24,11 +26,9 @@ public class FoodController {
         return foodService.addFood(food);
     }
 
-    @GetMapping("/page")
-    public BaseResponse<List<Food>> getFood(@RequestParam String name,
-                                            @RequestParam(defaultValue = "1") Integer pageNo,
-                                            @RequestParam(defaultValue = "10") Integer pageSize) {
-        return foodService.getEntitiesByPage(name, pageNo, pageSize);
+    @PostMapping("/page")
+    public BaseResponse<BasePageResponse> getFood(@RequestBody FoodQueryDto foodQueryDto) {
+        return foodService.getEntitiesByPage(foodQueryDto);
     }
 
 }

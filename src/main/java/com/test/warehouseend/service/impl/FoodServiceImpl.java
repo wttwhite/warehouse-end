@@ -1,6 +1,10 @@
 package com.test.warehouseend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.test.warehouseend.Dto.Food.FoodQueryDto;
+import com.test.warehouseend.common.BasePageResponse;
 import com.test.warehouseend.common.BaseResponse;
 import com.test.warehouseend.common.ResultUtils;
 import com.test.warehouseend.service.FoodService;
@@ -26,9 +30,23 @@ implements FoodService {
     }
 
     @Override
-    public BaseResponse<List<Food>> getEntitiesByPage(String name, int pageNo, int pageSize) {
-        int offset = (pageNo - 1) * pageSize;
-        return ResultUtils.success(foodMapper.selectByPage(name, offset, pageSize));
+    public BaseResponse<BasePageResponse> getEntitiesByPage(FoodQueryDto foodQueryDto) {
+        Page<Food> page = new Page<>(foodQueryDto.getCurrentPage(), foodQueryDto.getPageSize());
+        QueryWrapper<Food> wrapper = new QueryWrapper<>();
+        // 添加搜索条件
+        wrapper.like(foodQueryDto.getName() != null, "name", foodQueryDto.getName());
+        if (foodQueryDto.getType() != null) {
+            wrapper.eq("type", foodQueryDto.getType());
+        }
+        // 根据时间字段进行排序，时间为空的记录放在前面
+        wrapper.orderByAsc("CASE WHEN sellByDate IS NULL THEN 0 ELSE 1 END")
+               .orderByDesc("sellByDate");
+        // 执行分页查询
+        Page<Food> foodPage = foodMapper.selectPage(page, wrapper);
+        // 获取结果
+        List<Food> foodList = foodPage.getRecords();
+        long total = foodPage.getTotal();
+        return ResultUtils.success(ResultUtils.pageSuccess(foodList, total));
     }
 
     @Override
