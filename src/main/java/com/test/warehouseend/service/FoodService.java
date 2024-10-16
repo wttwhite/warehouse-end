@@ -1,7 +1,10 @@
 package com.test.warehouseend.service;
 
+import com.test.warehouseend.common.BaseResponse;
 import com.test.warehouseend.model.domain.Food;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author wangt
@@ -11,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface FoodService extends IService<Food> {
     boolean addFood(Food food);
 
+    BaseResponse<List<Food>> getEntitiesByPage(String name, int pageNumber, int pageSize);
 }

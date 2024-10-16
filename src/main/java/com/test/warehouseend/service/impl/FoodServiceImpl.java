@@ -1,10 +1,14 @@
 package com.test.warehouseend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.test.warehouseend.common.BaseResponse;
+import com.test.warehouseend.common.ResultUtils;
 import com.test.warehouseend.service.FoodService;
 import com.test.warehouseend.model.domain.Food;
 import com.test.warehouseend.mapper.FoodMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author wangt
@@ -14,6 +18,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food>
 implements FoodService {
+
+    private final FoodMapper foodMapper;
+
+    public FoodServiceImpl(FoodMapper foodMapper) {
+        this.foodMapper = foodMapper;
+    }
+
+    @Override
+    public BaseResponse<List<Food>> getEntitiesByPage(String name, int pageNo, int pageSize) {
+        int offset = (pageNo - 1) * pageSize;
+        return ResultUtils.success(foodMapper.selectByPage(name, offset, pageSize));
+    }
 
     @Override
     public boolean addFood(Food food) {
